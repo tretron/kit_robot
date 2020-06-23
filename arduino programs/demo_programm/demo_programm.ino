@@ -11,6 +11,7 @@ const int buttons_joints[][2] = { {button_tool_rotate_pos, button_tool_rotate_ne
                                   ,{button_wrist_pos,button_writst_neg}};
 const int stepper_joints[][2] = { {stepper_tool_rotate_DIR,stepper_tool_rotate_PULSE},
                                   {stepper_wrist_DIR,stepper_wrist_PULSE}};
+int stepper_speed = 50;
 
 void setup() {
   set_joint_inputs(buttons_joints);
@@ -19,8 +20,7 @@ void setup() {
 }
 
 void loop() {
-  operate_steppers();
-
+  operate_steppers(buttons_joints, stepper_joints);
 }
 
 void set_input_pullup(int pins[]){
@@ -44,6 +44,40 @@ void set_outputs(int pins[]){
     pinMode(pins[i], OUTPUT);
   }
 }
-void operate_steppers(){
-  
+void operate_steppers(int button_pins[][2], int stepper_pins[][2]){
+  for(int i = 0; i <= sizeof(button_pins)-1; i++){
+    move_joint(button_pins[i], stepper_pins[i]);
+  }
+}
+void move_joint(int inputs[],int steppers[]){
+  if (check_pressed(inputs[0]) == true){
+    rotate_CCW(steppers);
+  }
+  else if (check_pressed(inputs[1]) == true){
+    rotate_CW(steppers);
+  }
+}
+void rotate_CCW(int steppers[]){
+  digitalWrite(steppers[0], LOW);
+  move_stepper(steppers[1]);
+}
+void rotate_CW(int steppers[]){
+  digitalWrite(steppers[0], HIGH);
+  move_stepper(steppers[1]);
+}
+void move_stepper(int pin){
+  highpulse(pin);
+  delayMicroseconds(stepper_speed);
+  lowpulse(pin);
+  delayMicroseconds(stepper_speed);
+  highpulse(pin);
+}
+void highpulse(int pin){
+  digitalWrite(pin, HIGH);
+}
+void lowpulse(int pin){
+  digitalWrite(pin, LOW);
+}
+bool check_pressed(int pin){
+  return(digitalRead(pin));
 }
