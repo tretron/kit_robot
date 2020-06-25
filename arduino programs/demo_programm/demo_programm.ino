@@ -1,17 +1,17 @@
-#define button_tool_rotate_pos 1
-#define button_tool_rotate_neg 2
-#define button_wrist_pos 3
-#define button_writst_neg 4
-#define stepper_tool_rotate_DIR 5
+#define button_tool_rotate_pos 13
+#define button_tool_rotate_neg 12
+#define button_wrist_pos 11
+#define button_writst_neg 10
+#define stepper_tool_rotate_DIR 7
 #define stepper_tool_rotate_PULSE 6
-#define stepper_wrist_DIR 7
-#define stepper_wrist_PULSE 8
+#define stepper_wrist_DIR 5
+#define stepper_wrist_PULSE 4
 
 const int buttons_joints[][2] = { {button_tool_rotate_pos, button_tool_rotate_neg}
                                   ,{button_wrist_pos,button_writst_neg}};
 const int stepper_joints[][2] = { {stepper_tool_rotate_DIR,stepper_tool_rotate_PULSE},
                                   {stepper_wrist_DIR,stepper_wrist_PULSE}};
-int stepper_speed = 50;
+int stepper_speed = 5;
 
 void setup() {
   set_joint_inputs(buttons_joints);
@@ -30,7 +30,7 @@ void set_input_pullup(int pins[]){
 }
 void set_joint_inputs(int pins[][2]){
   for(int j=0; j<= (sizeof(pins)-1); j++){
-    set_outputs(pins[j]);
+    set_input_pullup(pins[j]);
   }
 }
 void set_stepper_outputs(int pins[][2]){
@@ -66,6 +66,7 @@ void rotate_CW(int steppers[]){
   move_stepper(steppers[1]);
 }
 void move_stepper(int pin){
+  Serial.println(stepper_speed);
   highpulse(pin);
   delayMicroseconds(stepper_speed);
   lowpulse(pin);
@@ -79,5 +80,7 @@ void lowpulse(int pin){
   digitalWrite(pin, LOW);
 }
 bool check_pressed(int pin){
-  return(digitalRead(pin));
+  bool temp = !digitalRead(pin);
+  //Serial.println(temp);
+  return(temp);
 }
