@@ -1,0 +1,7 @@
+The following messages were automatically dismissed when this file was opened
+
+File	Message	Response	
+Cycliodaldrive_1_10.SLDASM	The size (EN ISO 10642 - M3 x 8 - 8N) of the Toolbox component (socket csink head cap screw 10642_din) referenced by this assembly was not found.
+
+Would you like Toolbox to automatically create the missing size?	Yes
+
